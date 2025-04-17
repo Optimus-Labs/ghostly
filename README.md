@@ -66,6 +66,9 @@ cd ghostly
 python -m venv venv
 source venv/bin/activate
 
+# For windows
+source venv/Scripts/activate
+
 # Install dependencies
 pip install -r requirements.txt
 
@@ -73,31 +76,36 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-## 🔌 API Usage
+## 🔌 Usage
 
 Once the server is running, you can access the API documentation at `http://localhost:8000/docs`.
 
-### Basic Example
+### Generate a secure token
 
-```python
-import requests
+```bash
+curl -X POST "http://localhost:8000/api/token" \
+     -H "Content-Type: application/json" \
+     -d '{
+         "original_url": "https://example.com/protected-content.jpg",
+         "user_id": "user123",
+         "expires_in_seconds": 3600
+     }'
+```
 
-# Generate a secure access token
-response = requests.post(
-    "http://localhost:8000/api/v1/tokens/generate",
-    json={
-        "content_id": "your-content-id",
-        "user_id": "user-123",
-        "expiry": 3600  # Token valid for 1 hour
-    },
-    headers={"X-API-Key": "your-api-key"}
-)
+Response:
+```json
+{
+  "token": "abc123def456",
+  "secure_url": "http://localhost:8000/content/abc123def456",
+  "expires_at": "2023-11-15T12:34:56"
+}
+```
 
-# Get the secure access link
-secure_link = response.json()["secure_link"]
+### Access content using the token
 
-# Share this link with your user for secure access
-print(f"Secure access link: {secure_link}")
+Simply navigate to the secure URL:
+```
+http://localhost:8000/content/abc123def456
 ```
 
 ## 📊 Dashboard & Analytics

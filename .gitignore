@@ -1,2 +1,8 @@
-.venv
+venv
 app/__pycache__
+db/__pycache__
+models/__pycache__
+routers/__pycache__
+services/__pycache__
+tasks/__pycache__
+.env
